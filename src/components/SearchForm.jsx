@@ -1,0 +1,13 @@
+import { ArrowLeftRight, MapPin, CalendarDays, Search } from 'lucide-react'
+import { cities } from '../data'
+export default function SearchForm({ trip, setTrip, onSearch, compact=false }) {
+ const change=(key,value)=>setTrip(t=>({...t,[key]:value}))
+ const swap=()=>setTrip(t=>({...t,from:t.to,to:t.from}))
+ return <form onSubmit={e=>{e.preventDefault();onSearch()}} className={`grid gap-3 rounded-2xl bg-white p-3 shadow-soft sm:grid-cols-2 lg:grid-cols-[1fr_auto_1fr_1fr_auto] ${compact?'':'lg:p-4'}`}>
+ <label className="relative block rounded-xl border border-slate-200 px-4 py-3 focus-within:border-teal-500"><span className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400"><MapPin size={14} className="text-teal-600"/> From</span><select value={trip.from} onChange={e=>change('from',e.target.value)} className="w-full appearance-none bg-transparent text-sm font-bold text-slate-800 outline-none" required>{cities.map(c=><option key={c}>{c}</option>)}</select></label>
+ <button type="button" onClick={swap} aria-label="Swap locations" className="mx-auto -my-1 grid h-9 w-9 place-items-center rounded-full border border-slate-200 bg-white text-teal-700 hover:bg-teal-50 lg:my-auto"><ArrowLeftRight size={17}/></button>
+ <label className="block rounded-xl border border-slate-200 px-4 py-3 focus-within:border-teal-500"><span className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400"><MapPin size={14} className="text-orange-500"/> To</span><select value={trip.to} onChange={e=>change('to',e.target.value)} className="w-full appearance-none bg-transparent text-sm font-bold text-slate-800 outline-none" required>{cities.map(c=><option key={c}>{c}</option>)}</select></label>
+ <label className="block rounded-xl border border-slate-200 px-4 py-3 focus-within:border-teal-500"><span className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400"><CalendarDays size={14} className="text-teal-600"/> Journey date</span><input aria-label="Journey date" type="date" min={new Date().toISOString().slice(0,10)} value={trip.date} onChange={e=>change('date',e.target.value)} required className="w-full bg-transparent text-sm font-bold text-slate-800 outline-none"/></label>
+ <button type="submit" disabled={trip.from===trip.to} className="flex min-h-[58px] items-center justify-center gap-2 rounded-xl bg-teal-600 px-6 text-sm font-extrabold text-white shadow-lg shadow-teal-600/20 hover:-translate-y-0.5 hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"><Search size={18}/> Search buses</button>
+ </form>
+}
